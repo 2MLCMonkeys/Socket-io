@@ -2,7 +2,9 @@ var app = require('http').createServer(response);
 var fs = require('fs');
 var io = require('socket.io')(app);
 
-app.listen(3000);
+var PORT = process.env.PORT || 3000;
+
+app.listen(PORT);
 console.log("App running...");
 function response(req, res) {
     var file = "";
