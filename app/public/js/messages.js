@@ -1,12 +1,12 @@
 var userName = "";
 
 $(document).ready(function () {
-    getMessages();
     var userInfo = prompt("Please enter your username", "Username Here")
     if (userInfo != null) {
         userName = userInfo;
     }
     console.log(userInfo);
+    getMessages();
 
     var socket = io.connect();
     $("form#chat").submit(function (e) {
@@ -25,7 +25,7 @@ $(document).ready(function () {
     });
 
 });
-function saveMessage (msg) {
+function saveMessage(msg) {
     var newMessage = {
         message: msg,
         user: userName
@@ -33,33 +33,30 @@ function saveMessage (msg) {
     submitMessage(newMessage);
 };
 
-function submitMessage(newMessage){
+function submitMessage(newMessage) {
     console.log(newMessage);
-    $.ajax({url: "/api/messages", type:"POST", data: newMessage}).then((response)=> {
+    $.ajax({ url: "/api/messages", type: "POST", data: newMessage }).then((response) => {
         console.log(response);
     });
 };
 
-function getMessages(){
-    $.get("/api/messages", function(data){
-        console.log("Message", data);
+function getMessages() {
+    $.get("/api/messages", function (data) {
+        console.log("Data: ", data);
         messages = data;
-        if(!messages || !messages.length){
+        if (!messages || !messages.length) {
             displayEmpty();
         } else {
-            intializeMessages();
+            for (var i = 0; i < messages.length; i++) {
+                var final_message = $("<p />").text(messages[i].message);
+                $("#history").append(final_message);
+            }
+
         }
     });
 }
 
-function intializeMessages(){
-    for(var i = 0; i < messages[i].message.length; i++){
-        var final_message = $("<p />").text(messages[i].message);
-        $("#history").append(final_message);
-    }
-}
-
-function displayEmpty(){
+function displayEmpty() {
     var noMessages = "******No Chat History******"
     var final_message = $("<p />").text(noMessages);
     $("#history").append(final_message);
