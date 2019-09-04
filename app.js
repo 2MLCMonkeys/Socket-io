@@ -1,35 +1,35 @@
-var app = require('http').createServer(response);
+//Server
+var express = require('express');
+var app = express();
+var socket = require('http').Server(app);
+var io = require('socket.io')(socket);
+//Dependencies
 var fs = require('fs');
-var io = require('socket.io')(app);
-
+var path = require("path");
+var db = require('./app/models');
+//Port
 var PORT = process.env.PORT || 3000;
-
-app.listen(PORT);
-console.log("App running...");
-function response(req, res) {
-    var file = "";
-    if (req.url == "/") {
-        file = __dirname + '/index.html';
-    } else {
-        file = __dirname + req.url;
-    }
-    fs.readFile(file, function (err, data) {
-        if (err) {
-            res.writeHead(404);
-            return res.end('Page or file not found');
-        }
-        res.writeHead(200);
-        res.end(data);
+//Serving static files
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "app/public")));
+//routes
+require("./app/routes/messages-api-routes.js")(app);
+//sync's server and listening on port
+db.sequelize.sync().then(function () {
+    socket.listen(PORT, function () {
+      console.log("Server listening on: http://localhost:" + PORT);
     });
-}
-
-io.on("connection", function(socket) {
-    socket.on("send message", function(sent_msg, callback) {
-        sent_msg = "[ " + getCurrentDate() + " ]: " + sent_msg;
+  });
+//Connection to socket-io and sends message
+io.on("connection", function (socket) {
+    socket.on("send message", function (sent_msg, userName, callback) {
+        sent_msg = "[ " + getCurrentDate() + " ] " +userName+ " : " + sent_msg;
         io.sockets.emit("update messages", sent_msg);
         callback();
     });
 });
+//Gets current date for socket-io
 function getCurrentDate() {
     var currentDate = new Date();
     var day = (currentDate.getDate() < 10 ? '0' : '') + currentDate.getDate();

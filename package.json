@@ -18,8 +18,12 @@
   "author": "2mlcmonkeys",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.1",
     "fs": "0.0.1-security",
     "http": "0.0.0",
+    "mysql2": "^1.7.0",
+    "path": "^0.12.7",
+    "sequelize": "^5.18.1",
     "socket.io": "^2.2.0"
   }
 }

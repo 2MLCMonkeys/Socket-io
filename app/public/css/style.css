@@ -30,4 +30,5 @@ html, body, input {
     background: #FFF;
     border: 2px solid #eb5424;
     height: 550px;
+    overflow: scroll;
    }
