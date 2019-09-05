@@ -18,6 +18,7 @@
   "author": "2mlcmonkeys",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^8.1.0",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "http": "0.0.0",
